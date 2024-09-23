@@ -1,0 +1,60 @@
+from PIL import Image
+
+def mirror_horiz(image_name):
+    image= Image.open(image_name)
+    imagecopy= Image.open(image_name)
+    pixels = image.load()
+    pixelscopy = imagecopy.load()
+    for x in range(image.width):
+        for y in range(image.height):
+            pixels[x,y] = pixelscopy[image.width-x-1,y]
+    image.save(image_name[:-4] + "mirror_horiz.jpg")
+mirror_horiz("cat_caviar.jpg")
+
+def mirror_vert(image_name):
+    image= Image.open(image_name)
+    imagecopy= Image.open(image_name)
+    pixels = image.load()
+    pixelscopy = imagecopy.load()
+    for x in range(image.width):
+        for y in range(image.height):
+            pixels[x,y] = pixelscopy[x,image.height-y-1]
+    image.save(image_name[:-4] + "mirror_vert.jpg")
+mirror_vert("cat_caviar.jpg")
+
+def mirror_four(image_name):
+    image1= Image.open(image_name)
+    image2= Image.open(image_name)
+    image3= Image.open(image_name)
+    image4= Image.open(image_name)
+
+    pixels1 = image1.load()
+    pixels2 = image2.load()
+    pixels3 = image3.load()
+    pixels4 = image4.load()
+
+    new_image = Image.new(mode = "RGB", size = (image1.width,image1.height))
+
+    for x in range(image1.width):
+        for y in range(image1.height):
+            pixels2[x,y] = pixels1[image1.width-x-1,y]
+            pixels3[x,y] = pixels1[x,image1.height-y-1]
+            pixels4[x,y] = pixels1[image1.width-x-1,image1.height-y-1]
+
+    new_width=int(image1.width/2)
+    new_height=int(image1.height/2)
+
+    image1=image1.resize((new_width,new_height))
+    image2=image2.resize((new_width,new_height))
+    image3=image3.resize((new_width,new_height))
+    image4=image4.resize((new_width,new_height))
+
+    Image.Image.paste(new_image,image1, (0,0))
+    Image.Image.paste(new_image,image2, (new_width,0))
+    Image.Image.paste(new_image,image3, (0,new_height))
+    Image.Image.paste(new_image,image4, (new_width,new_height))
+
+
+
+    new_image.save(image_name[:-4] + "mirror_four.jpg")
+mirror_four("cat_caviar.jpg")
